@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">Runanner</string>
+    <string name="app_name">Runannex</string>
+    <string name="Рост">Рост</string>
+    <string name="Далее">Далее</string>
+    <string name="Возраст">Возраст</string>
+    <string name="Вес">Вес</string>
+    <string name="Полное_имя">Полное имя</string>
+
 </resources>
