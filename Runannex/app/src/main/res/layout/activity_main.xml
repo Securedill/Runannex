@@ -24,7 +24,7 @@
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.752" />
+        app:layout_constraintVertical_bias="0.667" />
 
     <EditText
         android:id="@+id/name"
@@ -42,7 +42,7 @@
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.437" />
+        app:layout_constraintVertical_bias="0.352" />
 
     <EditText
         android:id="@+id/years"
@@ -60,7 +60,7 @@
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.542" />
+        app:layout_constraintVertical_bias="0.457" />
 
     <EditText
         android:id="@+id/growth"
@@ -78,7 +78,7 @@
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.647" />
+        app:layout_constraintVertical_bias="0.562" />
 
     <Button
         android:id="@+id/next"
@@ -97,4 +97,5 @@
         app:layout_constraintTop_toTopOf="parent"
 
         app:layout_constraintVertical_bias="0.883" />
+
 </android.support.constraint.ConstraintLayout>

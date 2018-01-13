@@ -1,14 +1,22 @@
 package com.example.admin.runannex;
 
-import android.support.v7.app.AppCompatActivity;
+
+import android.app.ActionBar;
+import android.app.Activity;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout.LayoutParams;
+import android.widget.TextView;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
-
+    ActionBar actionbar;
+    TextView textview;
+    LayoutParams layoutparams;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         EditText growth = (EditText) findViewById(R.id.growth);
         Button next = (Button) findViewById(R.id.next);
         name.requestFocus();
+
     }
 
 }
