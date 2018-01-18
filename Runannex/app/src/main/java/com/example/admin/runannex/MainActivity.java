@@ -1,20 +1,31 @@
 package com.example.admin.runannex;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.EditText;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 
 public class MainActivity extends AppCompatActivity {
     Intent myIntent;
     SharedPreferences sPref;
     Editor ed;
+    ImageView imageView;
+     final int Pick_image = 1;
     @Override
             protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
@@ -23,13 +34,27 @@ public class MainActivity extends AppCompatActivity {
                 ed = sPref.edit();
                 if (sPref.getBoolean("firstrun", true)) {
 
-
                     final EditText weight = (EditText) findViewById(R.id.weight);
                     final EditText year = (EditText) findViewById(R.id.year);
                     final EditText name = (EditText) findViewById(R.id.name);
                     final EditText growth = (EditText) findViewById(R.id.growth);
                     final Button next = (Button) findViewById(R.id.next);
                     final TextView error = (TextView) findViewById(R.id.error);
+                    imageView = (ImageView)findViewById(R.id.image);
+                    Button PickImage = (Button) findViewById(R.id.button);
+                    PickImage.setVisibility(View.VISIBLE);
+                    PickImage.setBackgroundColor(Color.TRANSPARENT);
+                    PickImage.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View view) {
+
+                            Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                            photoPickerIntent.setType("image/*");
+                            startActivityForResult(photoPickerIntent, Pick_image);
+                        }
+                    });
+
 
 
                     name.requestFocus();
@@ -81,6 +106,26 @@ public class MainActivity extends AppCompatActivity {
 
             }
     private void closeActivity() {
+
         this.finish();
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+        switch(requestCode) {
+            case Pick_image:
+                if(resultCode == RESULT_OK){
+                    try {
+
+                        //Получаем URI изображения, преобразуем его в Bitmap
+                        //объект и отображаем в элементе ImageView нашего интерфейса:
+                        final Uri imageUri = imageReturnedIntent.getData();
+                        final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                        final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                        imageView.setImageBitmap(selectedImage);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+        }}
 }
