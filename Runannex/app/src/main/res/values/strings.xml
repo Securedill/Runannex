@@ -4,7 +4,7 @@
     <string name="Далее">Далее</string>
     <string name="Возраст">Возраст</string>
     <string name="Вес">Вес</string>
-    <string name="Полное_имя">Полное имя</string>
+    <string name="Имя">Имя</string>
     <string name="error">Заполните поля</string>
 
 </resources>
