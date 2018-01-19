@@ -1,5 +1,6 @@
 package com.example.admin.runannex;
 
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -24,12 +25,14 @@ public class MainActivity extends AppCompatActivity {
     Intent myIntent;
     SharedPreferences sPref;
     Editor ed;
-    ImageView imageView;
-     final int Pick_image = 1;
+    private static final int PICK_IMAGE = 100;
+    private ImageView imageView;
+
     @Override
             protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
                 setContentView(R.layout.activity_main);
+       
                 sPref = getApplicationContext().getSharedPreferences("Data", MODE_PRIVATE);
                 ed = sPref.edit();
                 if (sPref.getBoolean("firstrun", true)) {
@@ -40,23 +43,6 @@ public class MainActivity extends AppCompatActivity {
                     final EditText growth = (EditText) findViewById(R.id.growth);
                     final Button next = (Button) findViewById(R.id.next);
                     final TextView error = (TextView) findViewById(R.id.error);
-                    imageView = (ImageView)findViewById(R.id.image);
-                    Button PickImage = (Button) findViewById(R.id.button);
-                    PickImage.setVisibility(View.VISIBLE);
-                    PickImage.setBackgroundColor(Color.TRANSPARENT);
-                    PickImage.setOnClickListener(new View.OnClickListener() {
-
-                        @Override
-                        public void onClick(View view) {
-
-                            Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                            photoPickerIntent.setType("image/*");
-                            startActivityForResult(photoPickerIntent, Pick_image);
-                        }
-                    });
-
-
-
                     name.requestFocus();
                     error.setVisibility(View.INVISIBLE);
                     View.OnClickListener oclBtnOk = new View.OnClickListener() {
@@ -103,29 +89,37 @@ public class MainActivity extends AppCompatActivity {
 
 
                 }
+        imageView = (ImageView) findViewById(R.id.image_view);
 
+        Button pickImageButton = (Button) findViewById(R.id.pick_image_button);
+        pickImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openGallery();
             }
+        });
+    }
+
+    private void openGallery() {
+        Intent gallery =
+                new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        startActivityForResult(gallery, PICK_IMAGE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
+            Uri imageUri = data.getData();
+            imageView.setImageURI(imageUri);
+        }
+    }
+
+
     private void closeActivity() {
 
         this.finish();
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
-        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-        switch(requestCode) {
-            case Pick_image:
-                if(resultCode == RESULT_OK){
-                    try {
 
-                        //Получаем URI изображения, преобразуем его в Bitmap
-                        //объект и отображаем в элементе ImageView нашего интерфейса:
-                        final Uri imageUri = imageReturnedIntent.getData();
-                        final InputStream imageStream = getContentResolver().openInputStream(imageUri);
-                        final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                        imageView.setImageBitmap(selectedImage);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                }
-        }}
+    }
 }
