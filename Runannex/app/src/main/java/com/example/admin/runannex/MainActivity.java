@@ -1,24 +1,24 @@
 package com.example.admin.runannex;
 
-import android.Manifest;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.net.Uri;
-import android.os.Bundle;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.provider.MediaStore;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
             protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
                 setContentView(R.layout.activity_main);
-       
                 sPref = getApplicationContext().getSharedPreferences("Data", MODE_PRIVATE);
                 ed = sPref.edit();
                 if (sPref.getBoolean("firstrun", true)) {
@@ -67,6 +66,21 @@ public class MainActivity extends AppCompatActivity {
                                      myIntent = new Intent(v.getContext(), Training.class);
                                     startActivity(myIntent);
                                     sPref.edit().putBoolean("firstrun", false).commit();
+                                     try {
+
+                                        Bitmap bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
+                                        File path = Environment.getExternalStorageDirectory();
+                                        File dir = new File (path+"/.Runannex/");
+                                        dir.mkdirs();
+                                        File file = new File(dir, "picture.png");
+                                        OutputStream out = null;
+                                        out = new FileOutputStream(file);
+                                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+                                        out.flush();
+                                        out.close();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
                                     closeActivity();
 
 
@@ -102,8 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void openGallery() {
         Intent gallery =
-                new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(gallery, PICK_IMAGE);
     }
 
@@ -115,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
             imageView.setImageURI(imageUri);
         }
     }
-
+    
 
     private void closeActivity() {
 
