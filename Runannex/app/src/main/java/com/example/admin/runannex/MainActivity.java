@@ -12,7 +12,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -49,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
                     final Button next = (Button) findViewById(R.id.next);
                     final TextView error = (TextView) findViewById(R.id.error);
                     name.requestFocus();
+                    getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+                    getSupportActionBar().setCustomView(R.layout.abs_layout);
                     error.setVisibility(View.INVISIBLE);
                     View.OnClickListener oclBtnOk = new View.OnClickListener() {
                         @Override
