@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="preloaded_fonts" translatable="false">
+        <item>@font/armata</item>
+        <item>@font/atomic_age</item>
+        <item>@font/baloo_paaji</item>
+        <item>@font/changa_medium</item>
+        <item>@font/galindo</item>
+        <item>@font/passion_one</item>
+        <item>@font/yatra_one</item>
+    </array>
+</resources>

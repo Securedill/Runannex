@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.File;
 
@@ -22,7 +24,10 @@ public class Training extends AppCompatActivity {
     SharedPreferences sPref;
     String weight,year,growth,name;
     ImageView imageView;
-    long timeWhenStopped = 0;
+    int Seconds, Minutes, MilliSeconds ;
+    Handler handler;
+    long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,8 +47,9 @@ public class Training extends AppCompatActivity {
         final Button pause = (Button) findViewById(R.id.pause);
         final Button stop = (Button) findViewById(R.id.stop);
         final Button cont = (Button) findViewById(R.id.cont);
-        final Chronometer timer = (Chronometer) findViewById(R.id.chronometer);
+        final TextView timer = (TextView) findViewById(R.id.timer);
 
+        handler = new Handler() ;
 
         /* if(f.exists() && !f.isDirectory()) {
             imageView.setImageURI(Uri.parse(new File("file://" + path + "/.Runannex/picture.png").toString()));
@@ -52,8 +58,8 @@ public class Training extends AppCompatActivity {
         View.OnClickListener oclBtnStart = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timer.setBase(SystemClock.elapsedRealtime());
-                timer.start();
+                StartTime = SystemClock.uptimeMillis();
+                handler.postDelayed(runnable, 0);
                 start.setVisibility(View.INVISIBLE);
                 stop.setVisibility(View.VISIBLE);
                 pause.setVisibility(View.VISIBLE);
@@ -62,30 +68,33 @@ public class Training extends AppCompatActivity {
         start.setOnClickListener(oclBtnStart);
 
 
-
         View.OnClickListener oclBtnStop = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                handler.removeCallbacks(runnable);
+                MillisecondTime = 0L ;
+                StartTime = 0L ;
+                TimeBuff = 0L ;
+                UpdateTime = 0L ;
+                Seconds = 0 ;
+                Minutes = 0 ;
+                MilliSeconds = 0 ;
+
+                timer.setText("00:00:000");
                 stop.setVisibility(View.INVISIBLE);
                 pause.setVisibility(View.INVISIBLE);
                 cont.setVisibility(View.INVISIBLE);
                 start.setVisibility(View.VISIBLE);
-                timer.setBase(SystemClock.elapsedRealtime());
-                timeWhenStopped = 0;
-                timer.stop();
-
-
             }
         };
         stop.setOnClickListener(oclBtnStop);
 
 
-
         View.OnClickListener oclBtnPause = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timeWhenStopped = timer.getBase() - SystemClock.elapsedRealtime();
-                timer.stop();
+                TimeBuff += MillisecondTime;
+                handler.removeCallbacks(runnable);
                 pause.setVisibility(View.INVISIBLE);
                 cont.setVisibility(View.VISIBLE);
             }
@@ -95,18 +104,31 @@ public class Training extends AppCompatActivity {
         View.OnClickListener oclBtnCont = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timer.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
-                timer.start();
+                StartTime = SystemClock.uptimeMillis();
+                handler.postDelayed(runnable, 0);
                 cont.setVisibility(View.INVISIBLE);
                 pause.setVisibility(View.VISIBLE);
             }
         };
         cont.setOnClickListener(oclBtnCont);
-
     }
+    public Runnable runnable = new Runnable() {
 
+        public void run() {
+            final TextView timer = (TextView) findViewById(R.id.timer);
+            MillisecondTime = SystemClock.uptimeMillis() - StartTime;
+            UpdateTime = TimeBuff + MillisecondTime;
+            Seconds = (int) (UpdateTime / 1000);
+            Minutes = Seconds / 60;
+            Seconds = Seconds % 60;
+            MilliSeconds = (int) (UpdateTime % 1000);
+            timer.setText(String.format("%02d", Minutes) + ":"
+                    + String.format("%02d", Seconds) + ":"
+                    + String.format("%03d", MilliSeconds));
+            handler.postDelayed(this, 0);
+        }
 
-
+    };
 
     public boolean onCreateOptionsMenu(Menu menu){
 

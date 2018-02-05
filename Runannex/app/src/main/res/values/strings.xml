@@ -22,6 +22,7 @@
     <string name="stop">Стоп</string>
     <string name="pause">Пауза</string>
     <string name="cont">Продолжить</string>
+    <string name="time">Время</string>
 
 
 </resources>
