@@ -18,5 +18,10 @@
     <string name="Вес">Вес</string>
     <string name="Имя">Имя</string>
     <string name="error">Заполните поля</string>
+    <string name="start">Пуск</string>
+    <string name="stop">Стоп</string>
+    <string name="pause">Пауза</string>
+    <string name="cont">Продолжить</string>
+
 
 </resources>
