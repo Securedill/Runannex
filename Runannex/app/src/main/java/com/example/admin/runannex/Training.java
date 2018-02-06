@@ -1,6 +1,7 @@
 package com.example.admin.runannex;
 
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -12,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,10 +22,12 @@ import java.io.File;
 
 public class Training extends AppCompatActivity {
     SharedPreferences sPref;
+    SharedPreferences.Editor ed;
     String weight,year,growth,name;
     ImageView imageView;
     int Seconds, Minutes, MilliSeconds ;
     Handler handler;
+    Intent intent;
     long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
 
     @Override
@@ -36,6 +38,7 @@ public class Training extends AppCompatActivity {
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.abs_layout);
         sPref = getApplication().getSharedPreferences("Data", MODE_PRIVATE);
+        ed = sPref.edit();
         weight = sPref.getString("weigh", "");
         name = sPref.getString("nam", "");
         growth = sPref.getString("growt", "");
@@ -51,9 +54,24 @@ public class Training extends AppCompatActivity {
 
         handler = new Handler() ;
 
+
+
+
         /* if(f.exists() && !f.isDirectory()) {
             imageView.setImageURI(Uri.parse(new File("file://" + path + "/.Runannex/picture.png").toString()));
         } else { imageView.setImageResource(R.drawable.ava);} */
+
+
+
+
+
+
+
+
+
+
+
+
 
         View.OnClickListener oclBtnStart = new View.OnClickListener() {
             @Override
@@ -71,7 +89,13 @@ public class Training extends AppCompatActivity {
         View.OnClickListener oclBtnStop = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ed.putInt("Min", Minutes);
+                ed.putInt("Millis", MilliSeconds);
+                ed.putInt("Sec", Seconds);
+                ed.commit();
                 handler.removeCallbacks(runnable);
+                intent = new Intent(v.getContext(), Result.class);
+                startActivity(intent);
                 MillisecondTime = 0L ;
                 StartTime = 0L ;
                 TimeBuff = 0L ;
@@ -79,7 +103,6 @@ public class Training extends AppCompatActivity {
                 Seconds = 0 ;
                 Minutes = 0 ;
                 MilliSeconds = 0 ;
-
                 timer.setText("00:00:000");
                 stop.setVisibility(View.INVISIBLE);
                 pause.setVisibility(View.INVISIBLE);
@@ -112,6 +135,18 @@ public class Training extends AppCompatActivity {
         };
         cont.setOnClickListener(oclBtnCont);
     }
+
+
+
+
+
+
+
+
+
+
+
+
     public Runnable runnable = new Runnable() {
 
         public void run() {
@@ -129,6 +164,15 @@ public class Training extends AppCompatActivity {
         }
 
     };
+
+
+
+
+
+
+
+
+
 
     public boolean onCreateOptionsMenu(Menu menu){
 
