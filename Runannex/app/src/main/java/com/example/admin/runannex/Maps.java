@@ -1,45 +1,44 @@
 package com.example.admin.runannex;
 
+import android.Manifest;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
-public class Result extends AppCompatActivity implements OnMapReadyCallback{
-
-    SharedPreferences sPref;
-    int Seconds, Minutes, MilliSeconds;
+public class Maps extends AppCompatActivity implements OnMapReadyCallback, LocationSource.OnLocationChangedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_result);
+        setContentView(R.layout.activity_maps);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.abs_layout);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        final TextView timer = (TextView) findViewById(R.id.timer);
-
-        sPref = getApplication().getSharedPreferences("Data", MODE_PRIVATE);
-        Seconds = sPref.getInt("Sec",0);
-        Minutes = sPref.getInt("Min",0);
-        MilliSeconds = sPref.getInt("Millis",0);
-        timer.setText(String.format("%02d", Minutes) + ":" + String.format("%02d", Seconds) + ":" + String.format("%03d", MilliSeconds));
-
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+    }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        GoogleMap map = googleMap;
+        map.getUiSettings().setAllGesturesEnabled(true);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            map.setMyLocationEnabled(true);
+        }
+        map.getUiSettings().setZoomControlsEnabled(true);
     }
 
     @Override
@@ -48,19 +47,9 @@ public class Result extends AppCompatActivity implements OnMapReadyCallback{
         return true;
     }
 
-
-    public boolean onCreateOptionsMenu(Menu menu){
-
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-
-
-
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        googleMap.getUiSettings().setAllGesturesEnabled(false);
+    public void onLocationChanged(Location location) {
+
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -75,8 +64,8 @@ public class Result extends AppCompatActivity implements OnMapReadyCallback{
                 i.putExtra(Intent.EXTRA_SUBJECT, "Ошибки");
                 i.putExtra(Intent.EXTRA_TEXT,  "" );
                 try { startActivity(Intent.createChooser(i, "Выбирите почту..."));
-                    Toast.makeText(Result.this, "Спасибо за помощь", Toast.LENGTH_SHORT).show();
-                } catch (android.content.ActivityNotFoundException ex) { Toast.makeText(Result.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show(); }
+                    Toast.makeText(Maps.this, "Спасибо за помощь", Toast.LENGTH_SHORT).show();
+                } catch (android.content.ActivityNotFoundException ex) { Toast.makeText(Maps.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show(); }
                 //Toast.makeText(Result.this, "Спасибо за помощь", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.info:
@@ -86,5 +75,4 @@ public class Result extends AppCompatActivity implements OnMapReadyCallback{
         return super.onOptionsItemSelected(item);
 
     }
-
 }

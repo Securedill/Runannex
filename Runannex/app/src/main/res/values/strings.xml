@@ -23,6 +23,10 @@
     <string name="pause">Пауза</string>
     <string name="cont">Продолжить</string>
     <string name="time">Время</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="distance">Дистанция</string>
+    <string name="calorii">Калориии</string>
+    <string name="halfV">Средняя скорость</string>
 
 
 </resources>

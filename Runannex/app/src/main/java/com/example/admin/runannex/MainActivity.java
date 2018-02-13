@@ -59,10 +59,23 @@ public class MainActivity extends AppCompatActivity {
                     View.OnClickListener oclBtnOk = new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            int REQUEST_WRITE_STORAGE = 112;
+                            int REQUEST_FINE_LOCATION = 112;
                             boolean hasPermission = (ContextCompat.checkSelfPermission(MainActivity.this,
-                                    Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+                                    Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
+
                             if (!hasPermission) {
+                                ActivityCompat.requestPermissions(MainActivity.this,
+                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                        REQUEST_FINE_LOCATION);
+                            } else {
+
+
+
+                            int REQUEST_WRITE_STORAGE = 112;
+                            boolean hasPermission2 = (ContextCompat.checkSelfPermission(MainActivity.this,
+                                    Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+
+                            if (!hasPermission2) {
                                 ActivityCompat.requestPermissions(MainActivity.this,
                                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                                         REQUEST_WRITE_STORAGE);
@@ -113,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
 
                             }
+                    }
                         }
                     };
                     next.setOnClickListener(oclBtnOk);
