@@ -245,10 +245,10 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int item) {
                             if (item == 0) {
-                                sport.setImageResource(R.drawable.sportbeg);
+                                sport.setImageResource(R.drawable.sport_running);
                             }
                             if (item == 1) {
-                                sport.setImageResource(R.drawable.sportbiker);
+                                sport.setImageResource(R.drawable.sport_cycling);
                             }
 
                             Toast.makeText(getApplicationContext(), "Выбранный спорт " + Sport[item], Toast.LENGTH_SHORT).show();

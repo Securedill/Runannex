@@ -136,26 +136,26 @@
     <Button
         android:id="@+id/Bmap"
         android:layout_width="match_parent"
-        android:layout_height="270dp"
+        android:layout_height="290dp"
         android:background="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.354" />
+        app:layout_constraintVertical_bias="0.371" />
 
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="270dp"
+        android:layout_height="290dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.354"/>
+        app:layout_constraintVertical_bias="0.371"/>
 
     <ImageButton
         android:id="@+id/sport"
@@ -173,7 +173,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.954"
-        app:srcCompat="@drawable/sportbeg" />
+        app:srcCompat="@drawable/sport_running" />
 
     <ImageButton
         android:id="@+id/music"
@@ -183,15 +183,15 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:background="@drawable/music"
         android:visibility="visible"
+        android:background="@drawable/music"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.025"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.954"
-        app:srcCompat="@drawable/ic_audiotrack_light"/>
+        app:srcCompat="@drawable/music_ico"/>
 
     <TextView
         android:id="@+id/caloriir"
