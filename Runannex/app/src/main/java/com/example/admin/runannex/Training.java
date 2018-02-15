@@ -3,6 +3,7 @@ package com.example.admin.runannex;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,9 +16,11 @@ import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -28,7 +31,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
 import java.io.File;
-
 
 
 public class Training extends AppCompatActivity implements OnMapReadyCallback {
@@ -42,7 +44,9 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback {
     long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L;
     ImageButton music;
     private final int SPORT_LIST = 1;
+    private final int EXIT = 2;
     Boolean ifsport = true;
+    boolean ifmaps = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,23 +70,56 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback {
         final TextView timer = (TextView) findViewById(R.id.timer);
         final Button ButtonMap = (Button) findViewById(R.id.Bmap);
         final ImageButton sport = (ImageButton) findViewById(R.id.sport);
+        final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        final TextView time = (TextView) findViewById(R.id.time);
+        final TextView  calorii = (TextView) findViewById(R.id.calorii);
+        final TextView  distance = (TextView) findViewById(R.id.distance);
+        final TextView halfV = (TextView) findViewById(R.id.halfV);
+        final TextView halfVr = (TextView) findViewById(R.id.halfVr);
+        final TextView distancer = (TextView) findViewById(R.id.distancer);
+        final TextView caloriir = (TextView) findViewById(R.id.caloriir);
+        final ViewGroup.LayoutParams params = mapFragment.getView().getLayoutParams();
+
+
         sport.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
                 showDialog(SPORT_LIST);
+
 
             }
         });
 
 
         handler = new Handler();
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         View.OnClickListener oclBtnMap = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intent2 = new Intent(v.getContext(), Maps.class);
-                startActivity(intent2);
+                ButtonMap.setVisibility(View.INVISIBLE);
+                start.setVisibility(View.INVISIBLE);
+                pause.setVisibility(View.INVISIBLE);
+                stop.setVisibility(View.INVISIBLE);
+                cont.setVisibility(View.INVISIBLE);
+                timer.setVisibility(View.INVISIBLE);
+                sport.setVisibility(View.INVISIBLE);
+                time.setVisibility(View.INVISIBLE);
+                caloriir.setVisibility(View.INVISIBLE);
+                halfV.setVisibility(View.INVISIBLE);
+                halfVr.setVisibility(View.INVISIBLE);
+                distancer.setVisibility(View.INVISIBLE);
+                calorii.setVisibility(View.INVISIBLE);
+                distance.setVisibility(View.INVISIBLE);
+                music.setVisibility(View.INVISIBLE);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+                params.width = 1080;
+                params.height = 1920;
+                v.setLayoutParams(params);
+                ifmaps = true;
+
+
+
             }
         };
         ButtonMap.setOnClickListener(oclBtnMap);
@@ -203,8 +240,10 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback {
 
 
     public void onMapReady(final GoogleMap googleMap) {
-       map = googleMap;
+        final Button ButtonMap = (Button) findViewById(R.id.Bmap);
+        map = googleMap;
         map.getUiSettings().setAllGesturesEnabled(false);
+
     }
 
 
@@ -224,7 +263,16 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback {
                 } catch (android.content.ActivityNotFoundException ex) { Toast.makeText(Training.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show(); }
                 return true;
             case R.id.info:
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+                builder.setTitle("О приложении");
+                builder.setMessage("Lorem ipsum dolor ....");
+                builder.setPositiveButton("OK", null);
+                builder.setIcon(R.drawable.ic_launcher);
+
+                builder.show();
                 return true;
+
+
         }
         return super.onOptionsItemSelected(item);
 
@@ -259,10 +307,136 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback {
                     builder.setCancelable(true);
                     return builder.create();
 
-                default:
+                    case  EXIT:
+
+                        AlertDialog.Builder quitDialog = new AlertDialog.Builder(
+                                Training.this);
+                        quitDialog.setTitle("Вы уверены что хотите выйти?");
+
+                        quitDialog.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        });
+
+                        quitDialog.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
+
+                        quitDialog.show();
+
+                    default:
                     return null;
 
             }
         }
     }
+
+    public boolean onSupportNavigateUp(){
+                 final Button start = (Button) findViewById(R.id.start);
+                final Button pause = (Button) findViewById(R.id.pause);
+                final Button stop = (Button) findViewById(R.id.stop);
+                final Button cont = (Button) findViewById(R.id.cont);
+                final TextView timer = (TextView) findViewById(R.id.timer);
+                final Button ButtonMap = (Button) findViewById(R.id.Bmap);
+                final ImageButton sport = (ImageButton) findViewById(R.id.sport);
+                final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+                final TextView time = (TextView) findViewById(R.id.time);
+                final TextView  calorii = (TextView) findViewById(R.id.calorii);
+                final TextView  distance = (TextView) findViewById(R.id.distance);
+                final TextView halfV = (TextView) findViewById(R.id.halfV);
+                final TextView halfVr = (TextView) findViewById(R.id.halfVr);
+                final TextView distancer = (TextView) findViewById(R.id.distancer);
+                final TextView caloriir = (TextView) findViewById(R.id.caloriir);
+                final ViewGroup.LayoutParams params = mapFragment.getView().getLayoutParams();
+                ButtonMap.setVisibility(View.VISIBLE);
+                start.setVisibility(View.VISIBLE);
+                pause.setVisibility(View.VISIBLE);
+                stop.setVisibility(View.VISIBLE);
+                cont.setVisibility(View.VISIBLE);
+                timer.setVisibility(View.VISIBLE);
+                sport.setVisibility(View.VISIBLE);
+                time.setVisibility(View.VISIBLE);
+                caloriir.setVisibility(View.VISIBLE);
+                halfV.setVisibility(View.VISIBLE);
+                halfVr.setVisibility(View.VISIBLE);
+                distancer.setVisibility(View.VISIBLE);
+                calorii.setVisibility(View.VISIBLE);
+                distance.setVisibility(View.VISIBLE);
+                music.setVisibility(View.VISIBLE);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                params.width =1080;
+                params.height = 900;
+                View v = mapFragment.getView();
+                v.setLayoutParams(params);
+                ifmaps = false;
+
+        return true;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if(keyCode == KeyEvent.KEYCODE_BACK)
+        {
+           if (ifmaps) {
+
+
+
+               final Button start = (Button) findViewById(R.id.start);
+               final Button pause = (Button) findViewById(R.id.pause);
+               final Button stop = (Button) findViewById(R.id.stop);
+               final Button cont = (Button) findViewById(R.id.cont);
+               final TextView timer = (TextView) findViewById(R.id.timer);
+               final Button ButtonMap = (Button) findViewById(R.id.Bmap);
+               final ImageButton sport = (ImageButton) findViewById(R.id.sport);
+               final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+               final TextView time = (TextView) findViewById(R.id.time);
+               final TextView  calorii = (TextView) findViewById(R.id.calorii);
+               final TextView  distance = (TextView) findViewById(R.id.distance);
+               final TextView halfV = (TextView) findViewById(R.id.halfV);
+               final TextView halfVr = (TextView) findViewById(R.id.halfVr);
+               final TextView distancer = (TextView) findViewById(R.id.distancer);
+               final TextView caloriir = (TextView) findViewById(R.id.caloriir);
+               final ViewGroup.LayoutParams params = mapFragment.getView().getLayoutParams();
+               ButtonMap.setVisibility(View.VISIBLE);
+               start.setVisibility(View.VISIBLE);
+               pause.setVisibility(View.VISIBLE);
+               stop.setVisibility(View.VISIBLE);
+               cont.setVisibility(View.VISIBLE);
+               timer.setVisibility(View.VISIBLE);
+               sport.setVisibility(View.VISIBLE);
+               time.setVisibility(View.VISIBLE);
+               caloriir.setVisibility(View.VISIBLE);
+               halfV.setVisibility(View.VISIBLE);
+               halfVr.setVisibility(View.VISIBLE);
+               distancer.setVisibility(View.VISIBLE);
+               calorii.setVisibility(View.VISIBLE);
+               distance.setVisibility(View.VISIBLE);
+               music.setVisibility(View.VISIBLE);
+               getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+               params.width =1080;
+               params.height = 900;
+               View v = mapFragment.getView();
+               v.setLayoutParams(params);
+               ifmaps = false;
+
+               
+
+
+
+           } else {
+
+               showDialog(EXIT);
+
+           }
+        }
+        return true;
+    }
+
+
+
 }
