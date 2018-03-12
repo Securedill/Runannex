@@ -10,6 +10,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.location.Criteria;
+import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
@@ -39,24 +42,24 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.File;
 
 
-public class Training extends AppCompatActivity implements OnMapReadyCallback {
+public class Training extends AppCompatActivity implements OnMapReadyCallback{
     SharedPreferences sPref;
     SharedPreferences.Editor ed;
     String weight, year, growth, name;
     int Seconds, Minutes, MilliSeconds;
     Handler handler;
-    Intent intent, intent2;
+    Intent intent;
     long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L;
     ImageButton music;
     private final int SPORT_LIST = 1;
     private final int EXIT = 2;
-    boolean ifsport = true;
+    boolean ifjogging = true;
     boolean ifmaps = false;
     boolean ifrun = false;
     boolean ifpause = false;
@@ -64,6 +67,17 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback {
     LocationManager locationManager;
     Context mContext;
     boolean ifmarked = false;
+    boolean iffocused = false;
+    boolean ifasked = false;
+    int DistanceRunSum = 0;
+    double latitude1 = 0;
+    double longtitude1 = 0;
+    double latitude2 = 0;
+    double longtitude2 = 0;
+    boolean loc = true;
+    float distance123;
+    int caloriii;
+    PolylineOptions line= new PolylineOptions().width(17).color(Color.BLUE);
 
 
     @Override
@@ -79,6 +93,7 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback {
         name = sPref.getString("nam", "");
         growth = sPref.getString("growt", "");
         year = sPref.getString("yea", "");
+
         String path = Environment.getExternalStorageDirectory().getPath();
         File f = new File(path + "/.Runannex/picture.png");
         final Button start = (Button) findViewById(R.id.start);
@@ -108,8 +123,6 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback {
             @Override
             public void onClick(View v) {
                 showDialog(SPORT_LIST);
-
-
             }
         });
 
@@ -196,6 +209,9 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback {
                 ed.putInt("Min", Minutes);
                 ed.putInt("Millis", MilliSeconds);
                 ed.putInt("Sec", Seconds);
+                ed.putInt("dist", DistanceRunSum);
+                ed.putFloat("speed", distance123);
+                ed.putInt("cali", caloriii);
                 ed.commit();
                 handler.removeCallbacks(runnable);
                 MillisecondTime = 0L;
@@ -216,6 +232,17 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback {
                 ifpause = false;
                 sport.setClickable(true);
                 ifmarked = false;
+                DistanceRunSum = 0;
+                mapFragment.getMapAsync(new OnMapReadyCallback() {
+                    @Override
+                    public void onMapReady(GoogleMap googleMap) {
+                        googleMap.clear();
+                        line = null;
+                    }
+                });
+                calorii.setText("0");
+                halfV.setText("0");
+                distance.setText("0");
             }
         };
         stop.setOnClickListener(oclBtnStop);
@@ -251,6 +278,12 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback {
 
         public void run() {
             final TextView timer = (TextView) findViewById(R.id.timer);
+            final TextView calorii = (TextView) findViewById(R.id.calorii);
+            final TextView halfV = (TextView) findViewById(R.id.halfV);
+            int weightnum = Integer.parseInt(weight);
+            int growthnum = Integer.parseInt(growth);
+            int Seconds1 = 0;
+
             MillisecondTime = SystemClock.uptimeMillis() - StartTime;
             UpdateTime = TimeBuff + MillisecondTime;
             Seconds = (int) (UpdateTime / 1000);
@@ -260,6 +293,17 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback {
             timer.setText(String.format("%02d", Minutes) + ":"
                     + String.format("%02d", Seconds) + ":"
                     + String.format("%03d", MilliSeconds));
+
+            if (ifrun && DistanceRunSum > 10 && Seconds>1 && Seconds1 != Seconds) {
+                Seconds1 = Seconds;
+                distance123 = (DistanceRunSum*3600)/(Seconds*1000);
+               halfV.setText((int)distance123 + "");
+                if (ifjogging) {
+                   caloriii = (int)(0.035*weightnum + 0.029*(distance123*distance123/growthnum)*weightnum);
+                    calorii.setText(caloriii+"");
+                }
+                //if (!ifjogging) {calorii.setText();}
+            }
             handler.postDelayed(this, 0);
         }
 
@@ -275,6 +319,7 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback {
 
     public void onMapReady(final GoogleMap googleMap) {
         final Button ButtonMap = (Button) findViewById(R.id.Bmap);
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             googleMap.setMyLocationEnabled(true);
             return;
@@ -284,11 +329,39 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback {
             googleMap.getUiSettings().setAllGesturesEnabled(true);
             googleMap.getUiSettings().setZoomControlsEnabled(true);
             googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+            googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+                @Override
+                public boolean onMyLocationButtonClick() {
+                    if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                        buildAlertMessageNoGps();
+                    }
+                    return false;
+                }
+            });
 
         } else {
             googleMap.getUiSettings().setAllGesturesEnabled(false);
             googleMap.getUiSettings().setZoomControlsEnabled(false);
             googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+        }
+
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            if (!ifasked) {
+                buildAlertMessageNoGps();
+                ifasked = true;
+            }
+
+        } else {
+            Criteria criteria = new Criteria();
+            Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+            if (location != null && !iffocused) {
+                double lat = location.getLatitude();
+                double lng = location.getLongitude();
+                LatLng latlng = new LatLng(lat, lng);
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, 16));
+                iffocused = true;
+            }
         }
     }
 
@@ -343,9 +416,11 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback {
                         public void onClick(DialogInterface dialogInterface, int item) {
                             if (item == 0) {
                                 sport.setImageResource(R.drawable.sport_running);
+                                ifjogging = true;
                             }
                             if (item == 1) {
                                 sport.setImageResource(R.drawable.sport_cycling);
+                                ifjogging = false;
                             }
 
                             Toast.makeText(getApplicationContext(), "Выбранный спорт " + Sport[item], Toast.LENGTH_SHORT).show();
@@ -501,7 +576,10 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback {
         final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            buildAlertMessageNoGps();
+            if (!ifasked) {
+                buildAlertMessageNoGps();
+            }
+
 
         }
     }
@@ -527,29 +605,99 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback {
 
     LocationListener locationListenerGPS = new LocationListener() {
         @Override
-        public void onLocationChanged(android.location.Location location) {
+        public void onLocationChanged(final android.location.Location location) {
+            int weightnum = Integer.parseInt(weight);
+            int growthnum = Integer.parseInt(growth);
             final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-            final double latitude = location.getLatitude();
-            final double longitude = location.getLongitude();
-            final LatLng latLng = new LatLng(latitude, longitude);
-            mapFragment.getMapAsync(new OnMapReadyCallback() {
-                @Override
-                public void onMapReady(GoogleMap googleMap) {
-                    CameraPosition camPos = new CameraPosition.Builder()
-                            .target(new LatLng(latitude, longitude))
-                            .zoom(16)
-                            .build();
-                    CameraUpdate camUpd3 = CameraUpdateFactory.newCameraPosition(camPos);
-                    googleMap.animateCamera(camUpd3);
-                    if (ifmarked == false && ifrun) {
-                        Marker mSydney = googleMap.addMarker(new MarkerOptions()
-                                .position(latLng)
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.sport_cycling)));
-                        ifmarked = true;
+            final TextView distancer = (TextView) findViewById(R.id.distance);
+            final TextView calorii = (TextView) findViewById(R.id.calorii);
+            final TextView halfV = (TextView) findViewById(R.id.halfV);
+            final double[] latitude = {location.getLatitude()};
+            final double[] longitude = {location.getLongitude()};
+            final LatLng latLng = new LatLng(latitude[0], longitude[0]);
+            if (line == null) {
+                line = new PolylineOptions().width(17).color(Color.BLUE);
+            }
+
+            if (loc) {
+                loc = false;
+                latitude1 = location.getLatitude();
+                longtitude1 = location.getLongitude();
+                if (ifrun) {
+                    if (latitude2 != 0) {
+                        Location locationA = new Location("point A");
+                        locationA.setLatitude(latitude1);
+                        locationA.setLongitude(longtitude1);
+                        final LatLng latlng1 = new LatLng(latitude1, longtitude1);
+                        final LatLng latlng2 = new LatLng(latitude2, longtitude2);
+                        Location locationB = new Location("point B");
+                        locationB.setLatitude(latitude2);
+                        locationB.setLongitude(longtitude2);
+                        if (!ifpause) {
+                            DistanceRunSum += locationA.distanceTo(locationB);
+                            distancer.setText(DistanceRunSum + "");
+                            mapFragment.getMapAsync(new OnMapReadyCallback() {
+                                @Override
+                                public void onMapReady(GoogleMap googleMap) {
+                                    line.add(latlng1, latlng2);
+                                    googleMap.addPolyline(line);
+                                }
+                            });
+
+                        }
                     }
                 }
-            });
-        }
+
+                } else {
+                    loc = true;
+                    latitude2 = location.getLatitude();
+                    longtitude2 = location.getLongitude();
+                    if (ifrun && !ifpause) {
+                        if (latitude1 != 0) {
+                            Location locationA = new Location("point A");
+                            locationA.setLatitude(latitude2);
+                            locationA.setLongitude(longtitude2);
+                            final LatLng latlng1 = new LatLng(latitude1, longtitude1);
+                            final LatLng latlng2 = new LatLng(latitude2, longtitude2);
+                            Location locationB = new Location("point B");
+                            locationB.setLatitude(latitude1);
+                            locationB.setLongitude(longtitude1);
+                            if (!ifpause) {
+                                DistanceRunSum += locationA.distanceTo(locationB);
+
+                                mapFragment.getMapAsync(new OnMapReadyCallback() {
+                                    @Override
+                                    public void onMapReady(GoogleMap googleMap) {
+                                        line.add(latlng1, latlng2);
+                                        googleMap.addPolyline(line);
+                                    }
+                                });
+                            }
+                        }
+                    }
+
+                }
+
+                mapFragment.getMapAsync(new OnMapReadyCallback() {
+                    @Override
+                    public void onMapReady(GoogleMap googleMap) {
+                        CameraPosition camPos = new CameraPosition.Builder()
+                                .target(new LatLng(latitude[0], longitude[0]))
+                                .zoom(16)
+                                .build();
+                        CameraUpdate camUpd3 = CameraUpdateFactory.newCameraPosition(camPos);
+                        googleMap.animateCamera(camUpd3);
+                        if (!ifmarked && ifrun) {
+                            googleMap.addMarker(new MarkerOptions()
+                                    .anchor(0.5f, 0.5f)
+                                    .position(latLng)
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.starterpoint)));
+                            ifmarked = true;
+
+                        }
+                    }
+                });
+            }
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {

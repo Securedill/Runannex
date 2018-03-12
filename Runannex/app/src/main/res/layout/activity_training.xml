@@ -183,20 +183,20 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:visibility="visible"
         android:background="@drawable/music"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.025"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.954"
-        app:srcCompat="@drawable/music_ico"/>
+        app:srcCompat="@drawable/music_ico" />
 
     <TextView
         android:id="@+id/caloriir"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="91dp"
+        android:layout_height="15dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -214,7 +214,7 @@
     <TextView
         android:id="@+id/distancer"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="14dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -224,10 +224,11 @@
         android:textColor="@color/colorAccent"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/calorii"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.03"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.82" />
+        app:layout_constraintVertical_bias="0.819" />
 
     <TextView
         android:id="@+id/halfVr"
@@ -243,6 +244,7 @@
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/calorii"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.82" />
@@ -250,7 +252,7 @@
     <TextView
         android:id="@+id/calorii"
         android:layout_width="123dp"
-        android:layout_height="30dp"
+        android:layout_height="36dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -265,27 +267,27 @@
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.78" />
+        app:layout_constraintVertical_bias="0.793" />
 
     <TextView
         android:id="@+id/distance"
         android:layout_width="73dp"
-        android:layout_height="30dp"
+        android:layout_height="29dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:fontFamily="sans-serif"
-        android:text="0,00"
+        android:text="0"
         android:textAlignment="center"
         android:textColor="@color/colorAccent"
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/calorii"
-        app:layout_constraintHorizontal_bias="0.619"
+        app:layout_constraintHorizontal_bias="0.266"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.78" />
+        app:layout_constraintVertical_bias="0.781" />
 
     <TextView
         android:id="@+id/halfV"
@@ -296,17 +298,16 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:fontFamily="sans-serif"
-        android:text="00:00"
+        android:text="00.00"
         android:textAlignment="center"
         android:textColor="@color/colorAccent"
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.536"
-        app:layout_constraintStart_toEndOf="@+id/calorii"
+        app:layout_constraintHorizontal_bias="0.918"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.78" />
-
+        app:layout_constraintVertical_bias="0.782" />
 
 
 </android.support.constraint.ConstraintLayout>

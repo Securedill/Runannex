@@ -24,9 +24,9 @@
     <string name="cont">Продолжить</string>
     <string name="time">Время</string>
     <string name="title_activity_maps">Map</string>
-    <string name="distance">Дистанция</string>
-    <string name="calorii">Калориии</string>
-    <string name="halfV">Средняя скорость</string>
+    <string name="distance">Дистанция (м)</string>
+    <string name="calorii">Калории (Ккал)</string>
+    <string name="halfV">Ср. скорость (км/ч)</string>
 
 
 </resources>

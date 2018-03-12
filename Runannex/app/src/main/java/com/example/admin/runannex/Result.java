@@ -18,7 +18,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 public class Result extends AppCompatActivity implements OnMapReadyCallback{
 
     SharedPreferences sPref;
-    int Seconds, Minutes, MilliSeconds;
+    int Seconds, Minutes, MilliSeconds,caloriii,distance;
+    float speed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +31,21 @@ public class Result extends AppCompatActivity implements OnMapReadyCallback{
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         final TextView timer = (TextView) findViewById(R.id.timer);
+        final TextView speeder = (TextView) findViewById(R.id.halfV);
+        final TextView caloriir = (TextView) findViewById(R.id.calorii);
+        final TextView distancer = (TextView) findViewById(R.id.distance);
 
         sPref = getApplication().getSharedPreferences("Data", MODE_PRIVATE);
         Seconds = sPref.getInt("Sec",0);
         Minutes = sPref.getInt("Min",0);
         MilliSeconds = sPref.getInt("Millis",0);
+        caloriii = sPref.getInt("cali",0);
+        speed = sPref.getFloat("speed",0);
+        distance = sPref.getInt("dist",0);
         timer.setText(String.format("%02d", Minutes) + ":" + String.format("%02d", Seconds) + ":" + String.format("%03d", MilliSeconds));
+        caloriir.setText(caloriii+"");
+        speeder.setText((int)speed+"");
+        distancer.setText(distance+"");
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
