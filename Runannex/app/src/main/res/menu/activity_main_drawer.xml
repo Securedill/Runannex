@@ -7,7 +7,7 @@
         <item
             android:id="@+id/train"
             android:title="Главный экран"
-            android:icon="@drawable/sport_running1"/>
+            android:icon="@drawable/sport_running"/>
         <item
             android:id="@+id/ach"
             android:title="Достижения"
