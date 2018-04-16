@@ -27,6 +27,12 @@
     <string name="distance">Дистанция (м)</string>
     <string name="calorii">Калории (Ккал)</string>
     <string name="halfV">Ср. скорость (км/ч)</string>
+    <string name="open_drawer">Open</string>
+    <string name="close_drawer">Close</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="list">Всего выполнено </string>
+    <string name= "appname">Runannex</string>
 
 
 </resources>

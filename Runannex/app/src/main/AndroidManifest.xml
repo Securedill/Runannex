@@ -18,24 +18,30 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Training" />
+        <activity android:name=".Training"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".Result" />
+        <activity android:name=".Result"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".ACH"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+
 
     </application>
 

@@ -6,6 +6,9 @@
     android:layout_height="match_parent"
     android:background="#ADD8E6"
     tools:context="com.example.admin.runannex.MainActivity">
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_home"/>
 
     <EditText
         android:id="@+id/weight"
@@ -24,7 +27,7 @@
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.667" />
+        app:layout_constraintVertical_bias="0.799" />
 
     <EditText
         android:id="@+id/name"
@@ -43,7 +46,7 @@
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.352" />
+        app:layout_constraintVertical_bias="0.432" />
 
     <Button
         android:id="@+id/next"
@@ -61,7 +64,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
 
-        app:layout_constraintVertical_bias="0.883" />
+        app:layout_constraintVertical_bias="0.942" />
 
     <EditText
         android:id="@+id/year"
@@ -80,7 +83,7 @@
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.457" />
+        app:layout_constraintVertical_bias="0.555" />
 
     <EditText
         android:id="@+id/growth"
@@ -99,7 +102,7 @@
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.562" />
+        app:layout_constraintVertical_bias="0.676" />
 
     <TextView
         android:id="@+id/error"
@@ -115,9 +118,10 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.47"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.091" />
 
     <Button
         android:id="@+id/pick_image_button"
@@ -133,7 +137,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.076" />
+        app:layout_constraintVertical_bias="0.18" />
 
     <FrameLayout
         android:layout_width="130dp"
@@ -144,7 +148,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.075">
+        app:layout_constraintVertical_bias="0.178">
 
         <ImageView
             android:id="@+id/image_view"

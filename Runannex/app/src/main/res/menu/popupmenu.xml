@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <group android:id="@+id/menugroup1" >
+        <item
+            android:id="@+id/menu1"
+            android:title="За сегодня"/>
+        <item
+            android:id="@+id/menu2"
+            android:title="За неделю"/>
+        <item
+            android:id="@+id/menu3"
+            android:title="За месяц">
+        </item>
+
+        <item
+            android:id="@+id/menu4"
+            android:title="За год"/>
+    </group>
+
+</menu>

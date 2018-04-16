@@ -7,6 +7,10 @@
     android:background="#ADD8E6"
     tools:context="com.example.admin.runannex.Result">
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_home"/>
+
     <TextView
         android:id="@+id/timer"
         android:layout_width="254dp"
@@ -25,7 +29,7 @@
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.015" />
+        app:layout_constraintVertical_bias="0.100000024" />
 
     <TextView
         android:id="@+id/time"
@@ -43,7 +47,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.112" />
+        app:layout_constraintVertical_bias="0.18" />
 
     <TextView
         android:id="@+id/caloriir"
@@ -89,7 +93,8 @@
         app:layout_constraintHorizontal_bias="0.933"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.919" />
+        app:layout_constraintVertical_bias="0.919"
+        android:layout_marginLeft="8dp" />
 
     <TextView
         android:id="@+id/calorii"
@@ -150,17 +155,6 @@
         app:layout_constraintStart_toEndOf="@+id/calorii"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.896" />
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="330dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.497"/>
 
 
 </android.support.constraint.ConstraintLayout>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/train"
+            android:title="Главный экран"
+            android:icon="@drawable/sport_running1"/>
+        <item
+            android:id="@+id/ach"
+            android:title="Достижения"
+            android:icon="@drawable/dostizheniya_1"/>
+        <item
+            android:id="@+id/stat"
+            android:title="Статистика"
+            android:icon="@drawable/statis"/>
+        <item
+            android:id="@+id/plane"
+            android:title="План"
+            android:icon="@drawable/plane"/>
+        <item
+            android:id="@+id/alltrain"
+            android:title="Все тренировки"
+            android:icon="@drawable/alltrain"/>
+    </group>
+
+</menu>

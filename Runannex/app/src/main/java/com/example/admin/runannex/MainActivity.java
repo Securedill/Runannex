@@ -44,8 +44,6 @@ public class MainActivity extends AppCompatActivity {
                 ed = sPref.edit();
 
                 if (sPref.getBoolean("firstrun", true)) {
-
-
                     final EditText weight = (EditText) findViewById(R.id.weight);
                     final EditText year = (EditText) findViewById(R.id.year);
                     final EditText name = (EditText) findViewById(R.id.name);
@@ -53,8 +51,6 @@ public class MainActivity extends AppCompatActivity {
                     final Button next = (Button) findViewById(R.id.next);
                     final TextView error = (TextView) findViewById(R.id.error);
                     name.requestFocus();
-                    getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-                    getSupportActionBar().setCustomView(R.layout.abs_layout);
                     error.setVisibility(View.INVISIBLE);
                     View.OnClickListener oclBtnOk = new View.OnClickListener() {
                         @Override
