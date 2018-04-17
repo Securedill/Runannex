@@ -15,6 +15,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     Intent myIntent;
     SharedPreferences sPref;
     Editor ed;
+    private Toolbar toolbar;
     private static final int PICK_IMAGE = 100;
     private ImageView imageView;
 
@@ -40,9 +42,11 @@ public class MainActivity extends AppCompatActivity {
                 super.onCreate(savedInstanceState);
                 setContentView(R.layout.activity_main);
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                toolbar = (Toolbar)findViewById(R.id.toolbar);
+                setSupportActionBar(toolbar);
+        toolbar.setTitleTextAppearance(this, R.style.RunannexFont);
                 sPref = getApplicationContext().getSharedPreferences("Data", MODE_PRIVATE);
                 ed = sPref.edit();
-
                 if (sPref.getBoolean("firstrun", true)) {
                     final EditText weight = (EditText) findViewById(R.id.weight);
                     final EditText year = (EditText) findViewById(R.id.year);

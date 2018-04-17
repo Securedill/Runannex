@@ -41,6 +41,7 @@ public class Result extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setTitleTextAppearance(this, R.style.RunannexFont);
         toolbar.setNavigationIcon(R.mipmap.ic_arrow_back);
         final TextView timer = (TextView) findViewById(R.id.timer);
         final TextView speeder = (TextView) findViewById(R.id.halfV);
@@ -80,9 +81,6 @@ public class Result extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch(id){
-            case R.id.action_settings :
-
-                return true;
             case R.id.action_problem:
                 Intent i = new Intent(Intent.ACTION_SEND); i.setType("text/plain");
                 i.putExtra(Intent.EXTRA_EMAIL, new String[] {"slavafeatzhdos@gmail.com"});

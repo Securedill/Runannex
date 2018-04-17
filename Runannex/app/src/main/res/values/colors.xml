@@ -8,6 +8,6 @@
     <color name="drawer_item_color">#fff</color>
     <color name="list_divider">#5e5e5e</color>
     <color name="white">#ffff</color>
-    <color name="colorAccent1">#FF4081</color>
+    <color name="colorAccent1">#0037ff</color>
     <color name="darkgray">#add9e6</color>
 </resources>

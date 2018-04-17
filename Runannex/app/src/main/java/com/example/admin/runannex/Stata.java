@@ -32,6 +32,8 @@ public class Stata extends AppCompatActivity implements NavigationView.OnNavigat
         Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(viewClickListener);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitleTextAppearance(this, R.style.RunannexFont);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View header = navigationView.getHeaderView(0);
         TextView textView = (TextView)header.findViewById(R.id.textView);
@@ -109,9 +111,6 @@ public class Stata extends AppCompatActivity implements NavigationView.OnNavigat
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.action_settings:
-
-                return true;
             case R.id.action_problem:
                 Intent i = new Intent(Intent.ACTION_SEND);
                 i.setType("text/plain");

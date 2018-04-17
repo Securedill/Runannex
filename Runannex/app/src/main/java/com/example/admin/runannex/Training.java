@@ -2,6 +2,7 @@ package com.example.admin.runannex;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -12,6 +13,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -116,12 +118,10 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback,Na
         setContentView(R.layout.activity_training);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         String path = Environment.getExternalStorageDirectory().toString();
-        OutputStream fOut = null;
-        Integer counter = 0;
         File file = new File(path, "screen"+".jpg");
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //final ImageView imageView2 = (ImageView)findViewById(R.id.imageView2);
+        toolbar.setTitleTextAppearance(this, R.style.RunannexFont);
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -130,11 +130,11 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback,Na
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         path = Environment.getExternalStorageDirectory().getPath();
         File f = new File(path + "/.Runannex/picture.png");
-        //File a = new File(path+ "/.Runannex/picture2.png");
         View header = navigationView.getHeaderView(0);
         TextView textView = (TextView)header.findViewById(R.id.textView);
+        sPref = getApplication().getSharedPreferences("Data", MODE_PRIVATE);
+        name = sPref.getString("nam", "");
         textView.setText(name);
-        //textView.setTextColor(R.color.colorAccent);
         textView.setGravity(Gravity.CENTER_HORIZONTAL);
         navigationView.setNavigationItemSelectedListener(this);
         final ImageView imageView = (ImageView)header.findViewById(R.id.imageView);
@@ -145,7 +145,6 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback,Na
         sPref = getApplication().getSharedPreferences("Data", MODE_PRIVATE);
         ed = sPref.edit();
         weight = sPref.getString("weigh", "");
-        name = sPref.getString("nam", "");
         growth = sPref.getString("growt", "");
         year = sPref.getString("yea", "");
         final Button start = (Button) findViewById(R.id.start);
@@ -468,9 +467,6 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback,Na
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.action_settings:
-
-                return true;
             case R.id.action_problem:
                 Intent i = new Intent(Intent.ACTION_SEND);
                 i.setType("text/plain");

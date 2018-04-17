@@ -35,7 +35,7 @@
 
         <activity android:name=".Result"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".ACH"
+        <activity android:name=".Ach"
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <meta-data

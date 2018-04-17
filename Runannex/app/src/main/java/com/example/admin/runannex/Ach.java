@@ -38,6 +38,8 @@ public class Ach extends AppCompatActivity implements NavigationView.OnNavigatio
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ach);
         toolbar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitleTextAppearance(this, R.style.RunannexFont);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View header = navigationView.getHeaderView(0);
         TextView textView = (TextView)header.findViewById(R.id.textView);
@@ -173,9 +175,6 @@ public class Ach extends AppCompatActivity implements NavigationView.OnNavigatio
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.action_settings:
-
-                return true;
             case R.id.action_problem:
                 Intent i = new Intent(Intent.ACTION_SEND);
                 i.setType("text/plain");

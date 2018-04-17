@@ -2,11 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="3"
-        android:title="Настройки"
-        android:background="#FFF"/>
-    <item
         android:id="@+id/action_problem"
         android:orderInCategory="3"
         android:title="Сообщить об ошибке"
