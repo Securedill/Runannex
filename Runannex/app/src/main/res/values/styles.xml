@@ -13,7 +13,7 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
     <style name="RunannexFont" parent="TextAppearance.Design.Tab">
-        <item name="android:textSize">19sp</item>
+        <item name="android:textSize">21sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:fontFamily">@font/remachinescript</item>
         <item name="android:textColor">#c0f2f2</item>
