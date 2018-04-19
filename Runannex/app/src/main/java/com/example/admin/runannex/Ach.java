@@ -23,6 +23,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 public class Ach extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private Toolbar toolbar;
@@ -33,6 +34,10 @@ public class Ach extends AppCompatActivity implements NavigationView.OnNavigatio
     SharedPreferences sPref;
     SharedPreferences.Editor ed;
     String  name;
+    int[] distanceArr = new int[100];
+    int[] timeArr = new int[100];
+    int[] caloriiArr = new int[100];
+    int[] speedArr = new int[100];
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +51,37 @@ public class Ach extends AppCompatActivity implements NavigationView.OnNavigatio
         sPref = getApplication().getSharedPreferences("Data", MODE_PRIVATE);
         name = sPref.getString("nam", "");
         textView.setText(name);
-        //textView.setTextColor(R.color.colorAccent);
+        String savedString = sPref.getString("distancearr", "");
+        if (savedString != "") {
+            StringTokenizer st = new StringTokenizer(savedString, ",");
+            for (int i = 0; i < 100; i++) {
+                distanceArr[i] = Integer.parseInt(st.nextToken());
+            }
+        }
+
+        String savedString1 = sPref.getString("caloriiarr", "");
+        if (savedString1 != "") {
+            StringTokenizer st1 = new StringTokenizer(savedString1, ",");
+            for (int i = 0; i < 100; i++) {
+                caloriiArr[i] = Integer.parseInt(st1.nextToken());
+            }
+        }
+
+        String savedString2 = sPref.getString("timearr", "");
+        if (savedString2 != "") {
+            StringTokenizer st2 = new StringTokenizer(savedString2, ",");
+            for (int i = 0; i < 100; i++) {
+                timeArr[i] = Integer.parseInt(st2.nextToken());
+            }
+        }
+
+        String savedString3 = sPref.getString("speedarr", "");
+        if (savedString3 != "") {
+            StringTokenizer st3 = new StringTokenizer(savedString3, ",");
+            for (int i = 0; i < 100; i++) {
+                speedArr[i] = Integer.parseInt(st3.nextToken());
+            }
+        }
         textView.setGravity(Gravity.CENTER_HORIZONTAL);
         ImageView imageView = (ImageView)header.findViewById(R.id.imageView);
         if(f.exists() && !f.isDirectory()) {

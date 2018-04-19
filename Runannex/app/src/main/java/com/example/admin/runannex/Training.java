@@ -63,6 +63,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.StringTokenizer;
+
 import com.google.android.gms.maps.GoogleMap.SnapshotReadyCallback;
 
 
@@ -109,7 +111,6 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback,Na
     ImageView imageView2;
     String format = "jpg";
     String fileName = "FullScreenshot." + format;
-    public int i;
 
 
     @Override
@@ -141,6 +142,38 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback,Na
         if(f.exists() && !f.isDirectory()) {
             imageView.setImageURI(Uri.parse(new File("file://" + path + "/.Runannex/picture.png").toString()));
         }else { imageView.setImageResource(R.drawable.ava);}
+
+        String savedString = sPref.getString("distancearr", "");
+        if (savedString != "") {
+            StringTokenizer st = new StringTokenizer(savedString, ",");
+            for (int i = 0; i < 100; i++) {
+                distanceArr[i] = Integer.parseInt(st.nextToken());
+            }
+        }
+
+        String savedString1 = sPref.getString("caloriiarr", "");
+        if (savedString1 != "") {
+            StringTokenizer st1 = new StringTokenizer(savedString1, ",");
+            for (int i = 0; i < 100; i++) {
+                caloriiArr[i] = Integer.parseInt(st1.nextToken());
+            }
+        }
+
+        String savedString2 = sPref.getString("timearr", "");
+        if (savedString2 != "") {
+            StringTokenizer st2 = new StringTokenizer(savedString2, ",");
+            for (int i = 0; i < 100; i++) {
+                timeArr[i] = Integer.parseInt(st2.nextToken());
+            }
+        }
+
+        String savedString3 = sPref.getString("speedarr", "");
+        if (savedString3 != "") {
+            StringTokenizer st3 = new StringTokenizer(savedString3, ",");
+            for (int i = 0; i < 100; i++) {
+                speedArr[i] = Integer.parseInt(st3.nextToken());
+            }
+        }
 
         sPref = getApplication().getSharedPreferences("Data", MODE_PRIVATE);
         ed = sPref.edit();
@@ -264,6 +297,56 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback,Na
                 ed.putFloat("speed", distance123);
                 ed.putInt("cali", caloriii);
                 ed.commit();
+                StringBuilder str = new StringBuilder();
+                for (int i = 0; i < distanceArr.length; i++) {
+                    str.append(distanceArr[i]).append(",");
+                }
+                for (int i = 0; i<100; i++) {
+                    if (distanceArr[i] == 0) {
+                        distanceArr[i] = DistanceRunSum;
+                        break;
+                    }
+                }
+                sPref.edit().putString("distancearr", str.toString()).commit();
+
+
+                StringBuilder str1 = new StringBuilder();
+                for (int i = 0; i < speedArr.length; i++) {
+                    str1.append(speedArr[i]).append(",");
+                }
+                for (int i = 0; i<100; i++) {
+                    if (speedArr[i] == 0) {
+                        speedArr[i] = (int)distance123;
+                        break;
+                    }
+                }
+
+                sPref.edit().putString("speedarr", str1.toString()).commit();
+
+                StringBuilder str2 = new StringBuilder();
+                for (int i = 0; i < caloriiArr.length; i++) {
+                    str2.append(caloriiArr[i]).append(",");
+                }
+                for (int i = 0; i<100; i++) {
+                    if (caloriiArr[i] == 0) {
+                        caloriiArr[i] = caloriii;
+                        break;
+                    }
+                }
+                sPref.edit().putString("caloriiarr", str2.toString()).commit();
+
+                StringBuilder str3 = new StringBuilder();
+                for (int i = 0; i < timeArr.length; i++) {
+                    str3.append(caloriiArr[i]).append(",");
+                }
+                for (int i = 0; i<100; i++) {
+                    if (timeArr[i] == 0) {
+                        timeArr[i] = Seconds;
+                        break;
+                    }
+                }
+                sPref.edit().putString("timearr", str3.toString()).commit();
+
                 handler.removeCallbacks(runnable);
                 MillisecondTime = 0L;
                 StartTime = 0L;
@@ -393,15 +476,14 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback,Na
                     + String.format("%02d", Seconds) + ":"
                     + String.format("%03d", MilliSeconds));
 
-            if (ifrun && DistanceRunSum > 10 && Seconds>1 && Seconds1 != Seconds) {
-                Seconds1 = Seconds;
+            if (ifrun && DistanceRunSum > 10 && Seconds>1 ) {
                 distance123 = (DistanceRunSum*3600)/(Seconds*1000);
                 halfV.setText((int)distance123 + "");
                 if (ifjogging) {
-                    caloriii = (int)(0.035*weightnum + 0.029*(distance123*distance123/growthnum)*weightnum);
+                    caloriii =(weightnum*DistanceRunSum/1000);
                     calorii.setText(caloriii+"");
                 }
-                //if (!ifjogging) {calorii.setText(caloriii);}
+                if (!ifjogging) {calorii.setText(caloriii);}
             }
             handler.postDelayed(this, 0);
         }
@@ -848,34 +930,6 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback,Na
 
 
         }
-        /*if (id==R.id.stat){
-            if (ifrun) {
-                AlertDialog.Builder quitDialog = new AlertDialog.Builder(
-                        Training.this);
-                quitDialog.setTitle("Вы уверены что хотите покинуть тренировку?                                ");
-                quitDialog.setPositiveButton("Да", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent i = new Intent(Training.this, Stata.class);
-                        startActivity(i);
-                        finish();
-
-                    }
-                });
-                quitDialog.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
-                quitDialog.show();
-
-            } else {
-                Intent i = new Intent(this, Stata.class);
-                startActivity(i);
-            }
-
-
-        }*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
