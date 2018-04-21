@@ -22,6 +22,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.MediaStore;
+import android.renderscript.Sampler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -30,6 +31,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -59,7 +61,7 @@ import java.io.FileOutputStream;
 import java.util.StringTokenizer;
 
 
-public class Training extends AppCompatActivity implements OnMapReadyCallback,NavigationView.OnNavigationItemSelectedListener {
+public class Training extends AppCompatActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
     SharedPreferences sPref;
     SharedPreferences.Editor ed;
     String weight, year, growth, name;
@@ -77,7 +79,6 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback,Na
     LocationManager locationManager;
     Context mContext;
     boolean ifmarked = false;
-    boolean iffocused = false;
     boolean ifasked = false;
     int DistanceRunSum = 0;
     double latitude1 = 0;
@@ -91,6 +92,10 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback,Na
     int[] caloriiArr = new int[100];
     int[] speedArr = new int[100];
     Bundle b = new Bundle();
+    double maxlat = Double.MIN_VALUE;
+    double minlat = Double.MAX_VALUE;
+    double maxlng = Double.MIN_VALUE;
+    double minlng = Double.MAX_VALUE;
 
     int caloriii;
     PolylineOptions line = new PolylineOptions().width(17).color(Color.BLUE);
@@ -104,7 +109,6 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback,Na
         setContentView(R.layout.activity_training);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         String path = Environment.getExternalStorageDirectory().toString();
-        File file = new File(path, "screen" + ".jpg");
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextAppearance(this, R.style.RunannexFont);
@@ -268,6 +272,47 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback,Na
                 pause.setVisibility(View.VISIBLE);
                 ifrun = true;
                 sport.setClickable(false);
+                DistanceRunSum = 1;
+                mapFragment.getMapAsync(new OnMapReadyCallback() {
+                    @Override
+                    public void onMapReady(GoogleMap googleMap) {
+                        if (ActivityCompat.checkSelfPermission(Training.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(Training.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            return;
+                        }
+                        googleMap.setMyLocationEnabled(true);
+                    }
+                });
+                String savedString = sPref.getString("distancearr", "");
+                if (savedString != "") {
+                    StringTokenizer st = new StringTokenizer(savedString, ",");
+                    for (int i = 0; i < 100; i++) {
+                        distanceArr[i] = Integer.parseInt(st.nextToken());
+                    }
+                }
+
+                String savedString1 = sPref.getString("caloriiarr", "");
+                if (savedString1 != "") {
+                    StringTokenizer st1 = new StringTokenizer(savedString1, ",");
+                    for (int i = 0; i < 100; i++) {
+                        caloriiArr[i] = Integer.parseInt(st1.nextToken());
+                    }
+                }
+
+                String savedString2 = sPref.getString("timearr", "");
+                if (savedString2 != "") {
+                    StringTokenizer st2 = new StringTokenizer(savedString2, ",");
+                    for (int i = 0; i < 100; i++) {
+                        timeArr[i] = Integer.parseInt(st2.nextToken());
+                    }
+                }
+
+                String savedString3 = sPref.getString("speedarr", "");
+                if (savedString3 != "") {
+                    StringTokenizer st3 = new StringTokenizer(savedString3, ",");
+                    for (int i = 0; i < 100; i++) {
+                        speedArr[i] = Integer.parseInt(st3.nextToken());
+                    }
+                }
             }
         };
         start.setOnClickListener(oclBtnStart);
@@ -276,17 +321,27 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback,Na
         View.OnClickListener oclBtnStop = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ed.putInt("Min", Minutes);
-                ed.putInt("Millis", MilliSeconds);
-                ed.putInt("Sec", Seconds);
-                ed.putInt("dist", DistanceRunSum);
-                ed.putFloat("speed", distance123);
-                ed.putInt("cali", caloriii);
-                ed.commit();
-                StringBuilder str = new StringBuilder();
-                for (int i = 0; i < distanceArr.length; i++) {
-                    str.append(distanceArr[i]).append(",");
+                if (ActivityCompat.checkSelfPermission(Training.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(Training.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
                 }
+                final Location loc = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+                mapFragment.getMapAsync(new OnMapReadyCallback() {
+                    @Override
+                    public void onMapReady(GoogleMap googleMap) {
+                        if (ActivityCompat.checkSelfPermission(Training.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(Training.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            return;
+                        }
+                        googleMap.setMyLocationEnabled(false);
+                        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+                            googleMap.addMarker(new MarkerOptions()
+                                    .anchor(0.5f, 0.5f)
+                                    .position(new LatLng(loc.getLatitude(), loc.getLongitude()))
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.finishpoint)));
+
+
+                    }
+                });
+                StringBuilder str = new StringBuilder();
                 for (int i = 0; i < 100; i++) {
                     if (distanceArr[i] == 0) {
                         distanceArr[i] = DistanceRunSum;
@@ -294,33 +349,36 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback,Na
                         break;
                     }
                 }
+                for (int i = 0; i < distanceArr.length; i++) {
+                    str.append(distanceArr[i]).append(",");
+                }
                 sPref.edit().putString("distancearr", str.toString()).commit();
 
-                Intent intent = new Intent(Training.this, Result.class);
-                startActivity(intent);
 
                 StringBuilder str1 = new StringBuilder();
-                for (int i = 0; i < speedArr.length; i++) {
-                    str1.append(speedArr[i]).append(",");
-                }
+
                 for (int i = 0; i < 100; i++) {
                     if (speedArr[i] == 0) {
                         speedArr[i] = (int) distance123;
                         break;
                     }
                 }
+                for (int i = 0; i < speedArr.length; i++) {
+                    str1.append(speedArr[i]).append(",");
+                }
 
                 sPref.edit().putString("speedarr", str1.toString()).commit();
 
                 StringBuilder str2 = new StringBuilder();
-                for (int i = 0; i < caloriiArr.length; i++) {
-                    str2.append(caloriiArr[i]).append(",");
-                }
+
                 for (int i = 0; i < 100; i++) {
                     if (caloriiArr[i] == 0) {
                         caloriiArr[i] = caloriii;
                         break;
                     }
+                }
+                for (int i = 0; i < caloriiArr.length; i++) {
+                    str2.append(caloriiArr[i]).append(",");
                 }
                 sPref.edit().putString("caloriiarr", str2.toString()).commit();
 
@@ -334,8 +392,18 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback,Na
                         break;
                     }
                 }
+                for (int i = 0; i < timeArr.length; i++) {
+                    str3.append(caloriiArr[i]).append(",");
+                }
                 sPref.edit().putString("timearr", str3.toString()).commit();
 
+                ed.putInt("Min", Minutes);
+                ed.putInt("Millis", MilliSeconds);
+                ed.putInt("Sec", Seconds);
+                ed.putInt("dist", DistanceRunSum);
+                ed.putFloat("speed", distance123);
+                ed.putInt("cali", caloriii);
+                ed.commit();
                 handler.removeCallbacks(runnable);
                 MillisecondTime = 0L;
                 StartTime = 0L;
@@ -355,17 +423,28 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback,Na
                 ifpause = false;
                 sport.setClickable(true);
                 ifmarked = false;
-                DistanceRunSum = 0;
-                mapFragment.getMapAsync(new OnMapReadyCallback() {
+                Handler mHandler = new Handler();
+                mHandler.postDelayed(new Runnable() {
+
                     @Override
-                    public void onMapReady(GoogleMap googleMap) {
-                        googleMap.clear();
-                        line = null;
+                    public void run() {
+                        Intent intent = new Intent(Training.this, Result.class);
+                        startActivity(intent);
+                        DistanceRunSum = 0;
+                        mapFragment.getMapAsync(new OnMapReadyCallback() {
+                            @Override
+                            public void onMapReady(GoogleMap googleMap) {
+                                googleMap.clear();
+                                line = null;
+                            }
+                        });
+                        calorii.setText("0");
+                        halfV.setText("0");
+                        distance.setText("0");
                     }
-                });
-                calorii.setText("0");
-                halfV.setText("0");
-                distance.setText("0");
+
+                }, 1000L);
+
             }
         };
         stop.setOnClickListener(oclBtnStop);
@@ -491,7 +570,7 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback,Na
                 double lat = arg.getLatitude();
                 double lng = arg.getLongitude();
                 LatLng latlng = new LatLng(lat, lng);
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 16));
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 15));
             }
         });
     }
@@ -742,6 +821,7 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback,Na
             final TextView distancer = (TextView) findViewById(R.id.distance);
             final double[] latitude = {location.getLatitude()};
             final double[] longitude = {location.getLongitude()};
+
             final LatLng latLng = new LatLng(latitude[0], longitude[0]);
             if (line == null) {
                 line = new PolylineOptions().width(17).color(Color.BLUE);
@@ -751,6 +831,10 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback,Na
                 loc = false;
                 latitude1 = location.getLatitude();
                 longtitude1 = location.getLongitude();
+                if (latitude1 > maxlat) maxlat = latitude1;
+                if (latitude1 < minlat) minlat = latitude1;
+                if (longtitude1 > maxlng) maxlng = longtitude1;
+                if (longtitude1 < minlng) minlng = longtitude1;
                 if (ifrun) {
                     if (latitude2 != 0) {
                         Location locationA = new Location("point A");
@@ -780,6 +864,10 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback,Na
                 loc = true;
                 latitude2 = location.getLatitude();
                 longtitude2 = location.getLongitude();
+                if (latitude2 > maxlat) maxlat = latitude2;
+                if (latitude2 < minlat) minlat = latitude2;
+                if (longtitude2 > maxlng) maxlng = longtitude2;
+                if (longtitude2 < minlng) minlng = longtitude2;
                 if (ifrun && !ifpause) {
                     if (latitude1 != 0) {
                         Location locationA = new Location("point A");
@@ -811,7 +899,7 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback,Na
                 public void onMapReady(GoogleMap googleMap) {
                     CameraPosition camPos = new CameraPosition.Builder()
                             .target(new LatLng(latitude[0], longitude[0]))
-                            .zoom(16)
+                            .zoom(15)
                             .build();
                     CameraUpdate camUpd3 = CameraUpdateFactory.newCameraPosition(camPos);
                     googleMap.animateCamera(camUpd3);

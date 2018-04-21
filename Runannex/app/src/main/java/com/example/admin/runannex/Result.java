@@ -5,13 +5,12 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaMetadata;
-import android.net.Uri;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Environment;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,19 +18,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-
 import java.io.File;
-import java.io.OutputStream;
+import java.io.FileOutputStream;
+import java.util.StringTokenizer;
 
 public class Result extends AppCompatActivity {
 
     SharedPreferences sPref;
-    int Seconds, Minutes, MilliSeconds,caloriii,distance;
+    int Seconds, Minutes, MilliSeconds,caloriii,distance,i;
     float speed;
     private Toolbar toolbar;
+    int[] distanceArr = new int[100];
+
 
 
     @Override
@@ -47,8 +45,21 @@ public class Result extends AppCompatActivity {
         final TextView speeder = (TextView) findViewById(R.id.halfV);
         final TextView caloriir = (TextView) findViewById(R.id.calorii);
         final TextView distancer = (TextView) findViewById(R.id.distance);
-
+        final ImageView screen = (ImageView) findViewById(R.id.screen);
         sPref = getApplication().getSharedPreferences("Data", MODE_PRIVATE);
+        String savedString = sPref.getString("distancearr", "");
+        if (savedString != "") {
+            StringTokenizer st = new StringTokenizer(savedString, ",");
+            for (int i = 0; i < 100; i++) {
+                distanceArr[i] = Integer.parseInt(st.nextToken());
+            }
+        }
+        for (i = 0; i<100; i++) {
+            if (distanceArr[i+1] == 0) {
+                break;
+            }
+        }
+        String s = i+"";
         Seconds = sPref.getInt("Sec",0);
         Minutes = sPref.getInt("Min",0);
         MilliSeconds = sPref.getInt("Millis",0);
@@ -59,6 +70,7 @@ public class Result extends AppCompatActivity {
         caloriir.setText(caloriii+"");
         speeder.setText((int)speed+"");
         distancer.setText(distance+"");
+        screen.setImageBitmap(getImageFromSdCard(s));
 
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -101,6 +113,21 @@ public class Result extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+
+    }
+
+    public Bitmap getImageFromSdCard(String imageNumb) {
+        Bitmap bitmap = null;
+        File path = Environment.getExternalStorageDirectory();
+        String count = imageNumb+"";
+        try {
+            bitmap = BitmapFactory.decodeFile(path + "/.Runannex/"
+                    + "Map" + count
+                    + ".png");
+        } catch (IllegalArgumentException e) {
+            Log.e("Fucking error", "");
+        }
+        return bitmap;
 
     }
 
