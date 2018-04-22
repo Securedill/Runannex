@@ -56,6 +56,9 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.StringTokenizer;
 
 
@@ -89,6 +92,7 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback, N
     int[] timeArr = new int[100];
     int[] caloriiArr = new int[100];
     int[] speedArr = new int[100];
+    String[] dateArr = new String[100];
     Bundle b = new Bundle();
     double maxlat = Double.MIN_VALUE;
     double minlat = Double.MAX_VALUE;
@@ -335,6 +339,12 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback, N
                                     .anchor(0.5f, 0.5f)
                                     .position(new LatLng(loc.getLatitude(), loc.getLongitude()))
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.finishpoint)));
+                            CameraPosition camPos = new CameraPosition.Builder()
+                                .target(new LatLng(((maxlat + minlat)/2), ((maxlng + minlng)/2)))
+                                .zoom(15)
+                                .build();
+                        CameraUpdate camUpd3 = CameraUpdateFactory.newCameraPosition(camPos);
+                        googleMap.moveCamera(camUpd3);
 
 
                     }
@@ -344,6 +354,11 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback, N
                     if (distanceArr[i] == 0) {
                         distanceArr[i] = DistanceRunSum;
                         CaptureMapScreen(i);
+                        Date c = Calendar.getInstance().getTime();
+                        System.out.println("Current time => " + c);
+
+                        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+                        dateArr[i] = df.format(c);
                         break;
                     }
                 }
@@ -436,6 +451,11 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback, N
                                 line = null;
                             }
                         });
+                        maxlat = Double.MIN_VALUE;
+                        minlat = Double.MAX_VALUE;
+                        maxlng = Double.MIN_VALUE;
+                        minlng = Double.MAX_VALUE;
+
                         calorii.setText("0");
                         halfV.setText("0");
                         distance.setText("0");

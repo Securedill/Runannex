@@ -23,15 +23,15 @@ import android.widget.Toast;
 public class Stata extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
     SharedPreferences sPref;
     SharedPreferences.Editor ed;
+    Toolbar toolbar;
     String  name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stata);
-        setContentView(R.layout.activity_main);
         Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(viewClickListener);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextAppearance(this, R.style.RunannexFont);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -40,7 +40,6 @@ public class Stata extends AppCompatActivity implements NavigationView.OnNavigat
         sPref = getApplication().getSharedPreferences("Data", MODE_PRIVATE);
         name = sPref.getString("nam", "");
         textView.setText(name);
-        //textView.setTextColor(R.color.colorAccent);
         textView.setGravity(Gravity.CENTER_HORIZONTAL);
         ImageView imageView = (ImageView)header.findViewById(R.id.imageView);
         setSupportActionBar(toolbar);
