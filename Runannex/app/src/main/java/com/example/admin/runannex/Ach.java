@@ -88,10 +88,18 @@ public class Ach extends AppCompatActivity implements NavigationView.OnNavigatio
             imageView.setImageURI(Uri.parse(new File("file://" + path + "/.Runannex/picture.png").toString()));
         }else { imageView.setImageResource(R.drawable.ava);}
         int a = 0;
-        int dis = 15;
-        int cal = 105;
-        int v = 2;
-        int time = 45;
+        int dis = 0;
+        int cal = 0;
+        int v = 0;
+        int time = 0;
+        for(int i = 0;i<100;i++){
+            dis+=distanceArr[i];
+            time+=timeArr[i] ;
+            cal+=caloriiArr[i];
+            v+=speedArr[i];
+
+
+        }
         final TextView selection = (TextView) findViewById(R.id.selection);
         //dis = extras.getInt("time");
         if(dis>1){
@@ -248,9 +256,9 @@ public class Ach extends AppCompatActivity implements NavigationView.OnNavigatio
             startActivity(i);
 
 
-        } else if (id == R.id.plane) {
-
         } else if (id == R.id.alltrain) {
+            Intent i = new Intent(this, Alltrain.class);
+            startActivity(i);
 
         }
 

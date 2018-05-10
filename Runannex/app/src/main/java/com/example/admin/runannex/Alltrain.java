@@ -11,30 +11,42 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
-public class Stata extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
+public class Alltrain extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    List<Phone1> alltrainlay = new ArrayList<>();
+    ImageView imageMap;
     SharedPreferences sPref;
     SharedPreferences.Editor ed;
     String  name;
+    public int d,v,c,t;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stata);
-        String path = Environment.getExternalStorageDirectory().toString();
+        setContentView(R.layout.activity_alltrain);
+        d=v=c=t=0;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.alltrainlay);
+        DataAdapter1 adapter = new DataAdapter1(this, alltrainlay );
+        recyclerView.setAdapter(adapter);
+        String path = Environment.getExternalStorageDirectory().toString();
         toolbar.setTitleTextAppearance(this, R.style.RunannexFont);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View header = navigationView.getHeaderView(0);
@@ -42,8 +54,14 @@ public class Stata extends AppCompatActivity implements NavigationView.OnNavigat
         sPref = getApplication().getSharedPreferences("Data", MODE_PRIVATE);
         name = sPref.getString("nam", "");
         textView.setText(name);
-        //textView.setTextColor(R.color.colorAccent);
         textView.setGravity(Gravity.CENTER_HORIZONTAL);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MMM HH:mm");
+        String currentDateandTime = sdf.format(new Date());
+
+        alltrainlay.add(new Phone1 (currentDateandTime, R.drawable.ic_done_black_24dp, d+" м.  "+t+" мин. "+c+" кал.  "+v+" c/c "));
+        alltrainlay.add(new Phone1 (currentDateandTime, R.drawable.ic_done_black_24dp, d+" м.  "+t+" мин. "+c+" кал.  "+v+" c/c "));
+        alltrainlay.add(new Phone1 (currentDateandTime, R.drawable.ic_done_black_24dp, d+" м.  "+t+" мин. "+c+" кал.  "+v+" c/c "));
+
         path = Environment.getExternalStorageDirectory().getPath();
         File f = new File(path + "/.Runannex/picture.png");
         ImageView imageView = (ImageView)header.findViewById(R.id.imageView);
@@ -77,9 +95,9 @@ public class Stata extends AppCompatActivity implements NavigationView.OnNavigat
                 i.putExtra(Intent.EXTRA_TEXT, "");
                 try {
                     startActivity(Intent.createChooser(i, "Выбирите почту..."));
-                    Toast.makeText(Stata.this, "Спасибо за помощь", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Alltrain.this, "Спасибо за помощь", Toast.LENGTH_SHORT).show();
                 } catch (android.content.ActivityNotFoundException ex) {
-                    Toast.makeText(Stata.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Alltrain.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
                 }
                 return true;
             case R.id.info:
@@ -110,11 +128,6 @@ public class Stata extends AppCompatActivity implements NavigationView.OnNavigat
             startActivity(i);
 
         } else if (id == R.id.alltrain) {
-            Intent i = new Intent(this, Alltrain.class);
-            startActivity(i);
-
-
-
 
 
         }
@@ -124,4 +137,8 @@ public class Stata extends AppCompatActivity implements NavigationView.OnNavigat
         return true;
     }
 
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
 }

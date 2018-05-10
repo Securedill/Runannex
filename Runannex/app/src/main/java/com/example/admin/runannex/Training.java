@@ -92,17 +92,22 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback, N
     int[] timeArr = new int[100];
     int[] caloriiArr = new int[100];
     int[] speedArr = new int[100];
-    String[] dateArr = new String[100];
     Bundle b = new Bundle();
     double maxlat = Double.MIN_VALUE;
     double minlat = Double.MAX_VALUE;
     double maxlng = Double.MIN_VALUE;
     double minlng = Double.MAX_VALUE;
+    String date;
+    String[] dateArr = new String[100];
+    int tr = 0;
 
     int caloriii;
     PolylineOptions line = new PolylineOptions().width(17).color(Color.BLUE);
     private Toolbar toolbar;
     public int time = 10;
+
+    public Training() {
+    }
 
 
     @Override
@@ -314,6 +319,15 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback, N
                     for (int i = 0; i < 100; i++) {
                         speedArr[i] = Integer.parseInt(st3.nextToken());
                     }
+
+                }
+
+                String savedString4 = sPref.getString("datearr", "");
+                if (savedString4 != "") {
+                    StringTokenizer st4 = new StringTokenizer(savedString4, ",");
+                    for (int i = 0; i < 100; i++) {
+                        dateArr[i] = String.valueOf(savedString4.split(","));
+                    }
                 }
             }
         };
@@ -339,12 +353,12 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback, N
                                     .anchor(0.5f, 0.5f)
                                     .position(new LatLng(loc.getLatitude(), loc.getLongitude()))
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.finishpoint)));
-                            CameraPosition camPos = new CameraPosition.Builder()
-                                .target(new LatLng(((maxlat + minlat)/2), ((maxlng + minlng)/2)))
-                                .zoom(15)
-                                .build();
-                        CameraUpdate camUpd3 = CameraUpdateFactory.newCameraPosition(camPos);
-                        googleMap.moveCamera(camUpd3);
+                                                   CameraPosition camPos = new CameraPosition.Builder()
+                                                               .target(new LatLng(((maxlat + minlat)/2), ((maxlng + minlng)/2)))
+                                                               .zoom(15)
+                                                             .build();
+                                                CameraUpdate camUpd3 = CameraUpdateFactory.newCameraPosition(camPos);
+                                              googleMap.moveCamera(camUpd3);
 
 
                     }
@@ -355,13 +369,12 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback, N
                         distanceArr[i] = DistanceRunSum;
                         CaptureMapScreen(i);
                         Date c = Calendar.getInstance().getTime();
-                        System.out.println("Current time => " + c);
-
                         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-                        dateArr[i] = df.format(c);
+                        date = df.format(c);
                         break;
                     }
                 }
+
                 for (int i = 0; i < distanceArr.length; i++) {
                     str.append(distanceArr[i]).append(",");
                 }
@@ -410,6 +423,18 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback, N
                 }
                 sPref.edit().putString("timearr", str3.toString()).commit();
 
+                for (int i = 0; i < 100; i++) {
+                    if (dateArr[i] == null) {
+                        dateArr[i] = date;
+                        break;
+                    }
+                }
+                StringBuilder str4 = new StringBuilder();
+                for (int i = 0; i < 100; i++) {
+                    str4.append(dateArr[i]).append(",");
+                }
+                sPref.edit().putString("datearr", str4.toString()).commit();
+
                 ed.putInt("Min", Minutes);
                 ed.putInt("Millis", MilliSeconds);
                 ed.putInt("Sec", Seconds);
@@ -455,7 +480,6 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback, N
                         minlat = Double.MAX_VALUE;
                         maxlng = Double.MIN_VALUE;
                         minlng = Double.MAX_VALUE;
-
                         calorii.setText("0");
                         halfV.setText("0");
                         distance.setText("0");
@@ -523,7 +547,7 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback, N
                     + String.format("%03d", MilliSeconds));
 
             if (ifrun && DistanceRunSum > 10 && Seconds > 1) {
-                distance123 = (DistanceRunSum * 3600) / (Seconds * 1000);
+                distance123 = (DistanceRunSum * 3600) / ((int) (UpdateTime / 1000) * 1000);
                 halfV.setText((int) distance123 + "");
                 if (ifjogging) {
                     caloriii = (weightnum * DistanceRunSum / 1000);
@@ -983,6 +1007,65 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback, N
 
 
         }
+        if (id == R.id.stat) {
+            if (ifrun) {
+                AlertDialog.Builder quitDialog = new AlertDialog.Builder(
+                        Training.this);
+                quitDialog.setTitle("Вы уверены что хотите покинуть тренировку?                                ");
+                quitDialog.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent i = new Intent(Training.this, Stata.class);
+                        startActivity(i);
+                        finish();
+
+                    }
+                });
+                quitDialog.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+                quitDialog.show();
+
+            } else {
+                Intent b = new Intent(Training.this, Stata.class);
+                startActivity(b);
+                finish();
+            }
+
+
+        }
+        if (id == R.id.alltrain) {
+            if (ifrun) {
+                AlertDialog.Builder quitDialog = new AlertDialog.Builder(
+                        Training.this);
+                quitDialog.setTitle("Вы уверены что хотите покинуть тренировку?                                ");
+                quitDialog.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent i = new Intent(Training.this, Alltrain.class);
+                        startActivity(i);
+                        finish();
+
+                    }
+                });
+                quitDialog.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+                quitDialog.show();
+
+            } else {
+                Intent b = new Intent(Training.this, Alltrain.class);
+                startActivity(b);
+                finish();
+            }
+
+
+        }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -996,6 +1079,7 @@ public class Training extends AppCompatActivity implements OnMapReadyCallback, N
 
             @Override
             public void onSnapshotReady(Bitmap snapshot) {
+                tr++;
                 File path = Environment.getExternalStorageDirectory();
                 bitmap = snapshot;
                 String count = i+"";

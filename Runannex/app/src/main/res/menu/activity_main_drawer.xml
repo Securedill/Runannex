@@ -17,10 +17,6 @@
             android:title="Статистика"
             android:icon="@drawable/statis"/>
         <item
-            android:id="@+id/plane"
-            android:title="План"
-            android:icon="@drawable/plane"/>
-        <item
             android:id="@+id/alltrain"
             android:title="Все тренировки"
             android:icon="@drawable/alltrain"/>

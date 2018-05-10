@@ -20,6 +20,9 @@ class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         this.phones = phones;
         this.inflater = LayoutInflater.from(context);
     }
+
+
+
     @Override
     public DataAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
